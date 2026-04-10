@@ -1,0 +1,69 @@
+/* src/pages/Guide/NutritionalGuide.css */
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in-up { opacity: 0; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.interactive-hover { transition: all 0.3s ease; cursor: pointer; }
+.interactive-hover:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+
+.guide-main-container { position: relative; min-height: 100vh; background: #F8F9FA; padding-bottom: 100px; }
+.bg-blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; z-index: 0; pointer-events: none; }
+.blob1 { width: 500px; height: 500px; background-color: #E8F5E9; top: -100px; right: -100px; }
+.blob2 { width: 600px; height: 600px; background-color: #FFF3E0; bottom: -100px; left: -150px; }
+
+.guide-content-wrapper { max-width: 1200px; margin: 0 auto; padding: 40px 24px; position: relative; z-index: 1; }
+
+/* Hero */
+.guide-hero { text-align: center; margin-bottom: 48px; }
+.guide-icon-badge { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 4px 20px rgba(27,94,32,0.1); border: 1px solid #E8F5E9; }
+.guide-title { font-size: 42px; font-weight: 900; color: #1A1A1A; margin-bottom: 12px; font-family: Georgia, serif; }
+.guide-subtitle { font-size: 18px; color: #666; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+/* Controls */
+.guide-controls { background: white; padding: 24px; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 40px; display: flex; flex-direction: column; gap: 20px; }
+.guide-search-box { display: flex; align-items: center; background: #F8F9FA; padding: 12px 20px; border-radius: 16px; border: 1px solid #EEE; }
+.guide-search-box input { flex: 1; background: transparent; border: none; outline: none; margin-left: 12px; font-size: 16px; font-weight: 500; }
+
+.guide-category-filters { display: flex; flex-wrap: wrap; gap: 10px; }
+.category-chip { padding: 10px 20px; border-radius: 30px; border: 1px solid #EEE; background: white; color: #666; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+.category-chip.active { background: #1B5E20; color: white; border-color: #1B5E20; }
+
+/* Grid */
+.guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+.ingredient-card { background: white; border-radius: 24px; padding: 20px; display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.03); }
+.ingredient-thumb { height: 160px; background: #F9FBF9; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+.ingredient-thumb img { height: 80%; object-fit: contain; }
+
+.ing-cat { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #1B5E20; font-weight: 800; margin-bottom: 8px; display: block; }
+.ing-name { font-size: 18px; font-weight: 800; color: #1A1A1A; margin-bottom: 12px; line-height: 1.4; }
+.ing-preview { font-size: 14px; color: #666; line-height: 1.5; margin-bottom: 20px; }
+.read-more-btn { margin-top: auto; background: #F1F8E9; color: #2E7D32; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 13px; }
+
+/* Modal */
+.science-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.science-modal-content { background: white; width: 100%; max-width: 900px; border-radius: 32px; overflow: hidden; position: relative; animation: modalIn 0.3s ease-out; }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+.modal-close-btn { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 20px; background: #F5F5F5; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; }
+
+.modal-body-layout { display: grid; grid-template-columns: 1fr 1.5fr; }
+.modal-image-side { background: #F9FBF9; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; position: relative; }
+.modal-image-side img { width: 100%; object-fit: contain; }
+.modal-cat-tag { margin-top: 20px; padding: 6px 16px; background: #E8F5E9; color: #1B5E20; border-radius: 30px; font-weight: 800; font-size: 12px; text-transform: uppercase; }
+
+.modal-text-side { padding: 50px; }
+.modal-title { font-size: 32px; font-weight: 900; margin-bottom: 30px; font-family: Georgia, serif; }
+
+.modal-section { margin-bottom: 32px; }
+.modal-section-title { font-size: 18px; font-weight: 800; color: #1B5E20; display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.modal-benefits-list { list-style: none; padding: 0; }
+.modal-benefits-list li { display: flex; gap: 12px; margin-bottom: 12px; font-size: 15px; line-height: 1.6; color: #444; }
+
+.modal-nutrient-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+.nutrient-tag { background: #F1F8E9; color: #1B5E20; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; border: 1px solid #C8E6C9; }
+
+/* Responsive */
+@media (max-width: 850px) {
+  .modal-body-layout { grid-template-columns: 1fr; }
+  .modal-text-side { padding: 30px; }
+  .modal-image-side { height: 250px; }
+}

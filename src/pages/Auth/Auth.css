@@ -1,0 +1,74 @@
+/* src/pages/Auth/Auth.css */
+.auth-page-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Smooth Panning Background Animation */
+@keyframes backgroundPan {
+  0% { transform: scale(1.1) translateX(0); }
+  50% { transform: scale(1.1) translateX(-10%); }
+  100% { transform: scale(1.1) translateX(0); }
+}
+
+.auth-bg-image {
+  position: absolute;
+  top: 0; left: 0; width: 110%; height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  animation: backgroundPan 60s linear infinite;
+}
+
+.auth-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: -1;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  padding: 40px;
+  border-radius: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  text-align: center;
+  z-index: 10;
+}
+
+.auth-header h1 { font-size: 32px; font-weight: 900; color: #1B5E20; margin: 0; }
+.auth-header p { color: #2E7D32; font-weight: 600; margin: 8px 0 32px; }
+
+.auth-input-group { text-align: left; margin-bottom: 20px; }
+.auth-input-group label { display: block; font-size: 14px; font-weight: 700; color: #2E7D32; margin-bottom: 8px; margin-left: 4px; }
+
+.auth-input-box {
+  display: flex; align-items: center;
+  background: #F1F8E9;
+  border-radius: 16px; border: 1px solid #C8E6C9;
+  padding: 0 16px; height: 56px;
+  transition: all 0.2s;
+}
+
+.auth-input-box:focus-within { border-color: #2E7D32; background: #fff; box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1); }
+.auth-input-box input { flex: 1; border: none; background: none; outline: none; font-size: 16px; color: #1A1A1A; height: 100%; }
+
+.auth-primary-btn {
+  width: 100%; height: 56px; background: #2E7D32; color: white;
+  border: none; border-radius: 16px; font-size: 18px; font-weight: 800;
+  cursor: pointer; margin-top: 20px; transition: transform 0.2s, background 0.2s;
+}
+
+.auth-primary-btn:hover { background: #1B5E20; transform: translateY(-2px); }
+.auth-footer { margin-top: 24px; color: #555; font-weight: 500; }
+.auth-link { color: #2E7D32; font-weight: 800; cursor: pointer; text-decoration: none; }

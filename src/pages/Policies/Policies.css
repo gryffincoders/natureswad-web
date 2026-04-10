@@ -1,0 +1,63 @@
+/* src/pages/Policies/Policies.css */
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in-up { opacity: 0; animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.interactive-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
+.interactive-hover:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+
+.policy-main-container { position: relative; min-height: 100vh; background-color: #F8F9FA; text-align: left; padding-bottom: 60px;}
+.bg-blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; z-index: 0; pointer-events: none; }
+.blob1 { width: 500px; height: 500px; background-color: #E8F5E9; top: -100px; right: -100px; }
+.blob2 { width: 600px; height: 600px; background-color: #FFF3E0; bottom: 100px; left: -200px; }
+
+/* Focused Reading Width for Desktop */
+.policy-content-wrapper { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+
+/* Hero Cards */
+.policy-hero-card { display: flex; align-items: center; border-radius: 24px; padding: 32px 40px; margin-bottom: 32px; box-shadow: 0 12px 30px rgba(0,0,0,0.08); color: white; }
+.hero-icon-container { width: 64px; height: 64px; border-radius: 32px; background: rgba(255,255,255,0.15); display: flex; justify-content: center; align-items: center; margin-right: 24px; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; }
+.hero-main-title { font-size: 32px; font-weight: 900; margin: 0 0 8px; font-family: Georgia, serif; line-height: 1.2; }
+.hero-sub-title { font-size: 15px; color: rgba(255,255,255,0.8); margin: 0; font-weight: 500; letter-spacing: 0.5px;}
+
+/* Banners & Notices */
+.policy-notice-banner { display: flex; align-items: center; padding: 20px 24px; border-radius: 20px; margin-bottom: 32px; }
+.policy-notice-text { margin: 0 0 0 16px; font-size: 16px; line-height: 1.5; font-weight: 500; flex: 1; }
+
+/* Section Cards */
+.policy-section-card { background: white; border-radius: 24px; padding: 32px 40px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
+.policy-section-header { display: flex; align-items: center; margin-bottom: 20px; }
+.policy-section-title { font-size: 22px; font-weight: 800; margin: 0 0 0 12px; }
+
+/* Text Elements */
+.policy-paragraph { font-size: 16px; line-height: 1.8; color: #555; margin: 0 0 16px; font-weight: 400; }
+.policy-bold { font-weight: 700; color: #222; }
+.policy-highlight { color: #2E7D32; font-weight: 700; background: #F1F8E9; padding: 2px 8px; border-radius: 6px; }
+
+/* Lists */
+.policy-bullet-list { margin-bottom: 20px; }
+.policy-bullet-item { display: flex; align-items: flex-start; margin-bottom: 12px; }
+.policy-bullet-dot { margin-top: 6px; margin-right: 12px; flex-shrink: 0; }
+.policy-bullet-text { font-size: 16px; color: #444; line-height: 1.6; margin: 0; flex: 1; }
+
+/* Grids & Boxes */
+.policy-feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 16px; }
+.policy-feature-box { background: #F8F9FA; padding: 20px; border-radius: 16px; display: flex; align-items: center; border: 1px solid #F0F0F0; }
+.policy-feature-text { font-size: 15px; font-weight: 700; margin: 0 0 0 12px; flex: 1;}
+
+.policy-info-box { display: flex; align-items: center; background: #F1F8E9; padding: 20px; border-radius: 16px; border: 1px solid #C8E6C9; margin-bottom: 24px; }
+.policy-info-text { margin: 0 0 0 16px; color: #1B5E20; font-size: 15px; font-weight: 600; line-height: 1.5; flex: 1; }
+
+/* Contact Button */
+.policy-email-btn { display: flex; justify-content: center; align-items: center; background: #1B5E20; color: white; padding: 18px; border-radius: 20px; text-decoration: none; font-weight: 800; font-size: 16px; margin-top: 24px; transition: background 0.2s; box-shadow: 0 8px 20px rgba(27, 94, 32, 0.2); border: none; cursor: pointer; width: 100%;}
+.policy-email-btn:hover { background: #144918; }
+.policy-email-btn svg { margin-right: 10px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .policy-content-wrapper { padding: 20px 16px; }
+  .policy-hero-card { padding: 24px; flex-direction: column; text-align: center; }
+  .hero-icon-container { margin: 0 0 16px 0; }
+  .policy-section-card { padding: 24px; }
+  .policy-section-header { align-items: flex-start; }
+  .policy-section-title { font-size: 20px; }
+}
