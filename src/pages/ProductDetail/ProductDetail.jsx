@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { IoShareSocialOutline, IoPricetag, IoDocumentText, IoSparkles, IoAdd, IoRemove, IoBagAdd, IoCheckmarkCircle } from 'react-icons/io5';
 import HeaderTemp from '../../components/layout/HeaderTemp';
-import { PRODUCTS } from '../../constants/ProductsData';
+import { PRODUCTS, slugify } from '../../constants/ProductsData';
 import { useCart } from '../../context/CartContext';
 import './ProductDetail.css';
 
@@ -91,8 +91,14 @@ export default function ProductDetail() {
     const relatedTitleParts = cleanText(related.name).split('|');
     const displayRelatedTitle = relatedTitleParts[0].trim();
 
+    const handleRelatedClick = () => {
+      const categoryPath = slugify(related.category || 'Other');
+      const namePath = slugify(related.name);
+      navigate(`/product/${categoryPath}/${namePath}/${related.id}`);
+    };
+
     return (
-      <div key={related.id} className="related-card interactive-hover" onClick={() => navigate(`/product/${related.id}`)}>
+      <div key={related.id} className="related-card interactive-hover" onClick={handleRelatedClick}>
         <div className="related-image-wrapper">
           <img src={displayImage} alt={related.name} className="related-image" />
         </div>

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoSearch, IoCloseCircle, IoArrowForward, IoLeaf, IoHeartOutline, IoShieldCheckmark, IoWaterOutline } from 'react-icons/io5';
 import { FaInstagram, FaFacebook, FaEnvelope } from 'react-icons/fa';
 import HeaderTemp from '../../components/layout/HeaderTemp';
-import { PRODUCTS } from '../../constants/ProductsData';
+import { PRODUCTS, slugify } from '../../constants/ProductsData';
 import './Home.css';
 
 const cleanText = (text) => text ? text.replace(/\//g, '') : '';
@@ -17,6 +17,11 @@ export default function Home() {
 
   const allProducts = Object.values(PRODUCTS);
   const heroProduct = PRODUCTS['c1'];
+  
+  // Hero URL formulation
+  const heroCategoryPath = slugify(heroProduct.category || 'Other');
+  const heroNamePath = slugify(heroProduct.name);
+  const heroProductUrl = `/product/${heroCategoryPath}/${heroNamePath}/${heroProduct.id}`;
   
   // Curated lists
   const youMayAlsoLikeIds = ['h1', 'a2', 'f3', 'p2', 'h5', 's1'];
@@ -47,8 +52,12 @@ export default function Home() {
       highlightTag = cleanText(product.nutritionalInfo.ingredients[0]).substring(0, 20); 
     }
 
+    const categoryPath = slugify(product.category || 'Other');
+    const namePath = slugify(product.name);
+    const productUrl = `/product/${categoryPath}/${namePath}/${product.id}`;
+
     return (
-      <div className="home-product-card interactive-hover" onClick={() => navigate(`/product/${product.id}`)}>
+      <div className="home-product-card interactive-hover" onClick={() => navigate(productUrl)}>
         <div className="card-image-container">
           {displayImage ? (
             <img src={displayImage} alt={product.name} className="card-image" />
@@ -99,16 +108,32 @@ export default function Home() {
             )}
           </div>
           
-          {suggestions.length > 0 && (
+        {suggestions.length > 0 && (
             <div className="suggestions-dropdown">
               {suggestions.slice(0, 5).map((item) => {
                 const thumbImage = item.image || (item.images && item.images[0]);
+                
+                // SEO-friendly URL generation for search results
+                const itemCategoryPath = slugify(item.category || 'Other');
+                const itemNamePath = slugify(item.name);
+                const itemUrl = `/product/${itemCategoryPath}/${itemNamePath}/${item.id}`;
+
                 return (
-                  <div key={item.id} className="suggestion-item" onClick={() => { setSearchQuery(''); setSuggestions([]); navigate(`/product/${item.id}`); }}>
+                  <div 
+                    key={item.id} 
+                    className="suggestion-item" 
+                    onClick={() => { 
+                      setSearchQuery(''); 
+                      setSuggestions([]); 
+                      navigate(itemUrl); // <-- UPDATED NAVIGATE HERE
+                    }}
+                  >
                     {thumbImage ? (
                       <img src={thumbImage} alt={item.name} className="suggestion-thumb" />
                     ) : (
-                      <div className="suggestion-thumb placeholder-thumb"><IoLeaf size={20} color="#CCC" /></div>
+                      <div className="suggestion-thumb placeholder-thumb">
+                        <IoLeaf size={20} color="#CCC" />
+                      </div>
                     )}
                     <div className="suggestion-text">
                       <h5 className="truncate">{cleanText(item.name)}</h5>
@@ -121,7 +146,7 @@ export default function Home() {
           )}
         </div>
 
-        <div className="hero-banner interactive-hover fade-in-up" style={{ animationDelay: '0.1s' }} onClick={() => navigate(`/product/${heroProduct.id}`)}>
+        <div className="hero-banner interactive-hover fade-in-up" style={{ animationDelay: '0.1s' }} onClick={() => navigate(heroProductUrl)}>
           <div className="hero-content">
             <div className="hero-text-content">
               <span className="hero-eyebrow">Buy Healthy Breakfast Mix India</span>

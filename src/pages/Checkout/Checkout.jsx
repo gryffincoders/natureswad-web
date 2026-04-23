@@ -1,7 +1,7 @@
 // src/pages/Checkout/Checkout.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IoLocationOutline, IoWalletOutline, IoCardOutline, IoCashOutline, IoShieldCheckmark } from 'react-icons/io5';
+import { IoLocationOutline, IoWalletOutline, IoCardOutline, IoCashOutline, IoShieldCheckmark, IoSparkles, IoCheckmarkCircle } from 'react-icons/io5';
 import HeaderTemp from '../../components/layout/HeaderTemp';
 import { useCart } from '../../context/CartContext';
 import { auth } from '../../config/firebase'; 
@@ -26,6 +26,13 @@ export default function Checkout() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('online');
 
+  // --- REWARDS STATE ---
+  const [userPoints, setUserPoints] = useState(0);
+  const [usePoints, setUsePoints] = useState(false);
+  const POINTS_REQUIRED_TO_REDEEM = 200;
+  const DISCOUNT_VALUE = 200; 
+  const POINTS_EARNED_PER_ORDER = 25;
+
   // Form State
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -44,22 +51,49 @@ export default function Checkout() {
     stateName.trim().length > 0 &&
     pincode.trim().length === 6;
 
-  // Math
+  // --- FETCH USER POINTS (WORKS FOR GUEST PHONE NUMBERS TOO) ---
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      // Use logged in UID, or fallback to the 10-digit phone number they are typing
+      const uid = auth?.currentUser?.uid || (cleanPhone.length === 10 ? cleanPhone : null);
+      
+      if (!uid) {
+        setUserPoints(0);
+        setUsePoints(false); // Reset if they delete their phone number
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/user-points/${uid}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUserPoints(data.points || 0);
+        }
+      } catch (error) {
+        console.log("Could not fetch points", error);
+      }
+    };
+    fetchUserPoints();
+  }, [auth?.currentUser, cleanPhone]); // Re-runs when they type their phone number
+
+  // --- CALCULATIONS ---
   const subtotal = Number(cartTotal) || 0;
   const shipping = subtotal >= 500 ? 0 : 40;
   const tax = subtotal * 0.05;
-  const total = subtotal + shipping + tax;
+  const pointsDiscount = usePoints ? DISCOUNT_VALUE : 0;
+  const total = Math.max(0, subtotal + shipping + tax - pointsDiscount);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (cartItems.length === 0 && !isProcessing) {
-      navigate('/shop');
-    }
+    if (cartItems.length === 0 && !isProcessing) navigate('/shop');
   }, [cartItems, navigate, isProcessing]);
 
-  // ✅ CORE LOGIC: Uses your fixed user identification
   const getOrderDetails = () => ({
     userId: auth?.currentUser?.uid || cleanPhone, 
+    subtotal: subtotal,
+    discountApplied: pointsDiscount,
+    pointsRedeemed: usePoints ? POINTS_REQUIRED_TO_REDEEM : 0,
+    pointsEarned: POINTS_EARNED_PER_ORDER,
     total: total,
     items: cartItems,
     address: { name, phone: cleanPhone, address, city, stateName, pincode },
@@ -78,12 +112,7 @@ export default function Checkout() {
   const startRazorpayPayment = async () => {
     setIsProcessing(true);
     const res = await loadRazorpayScript();
-
-    if (!res) {
-      alert('Razorpay failed to load');
-      setIsProcessing(false);
-      return;
-    }
+    if (!res) { alert('Razorpay failed to load'); setIsProcessing(false); return; }
 
     try {
       const response = await fetch(`${API_URL}/create-razorpay-order`, {
@@ -91,7 +120,6 @@ export default function Checkout() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: total })
       });
-
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
 
@@ -109,27 +137,19 @@ export default function Checkout() {
             const verifyRes = await fetch(`${API_URL}/verify-and-save-order`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                ...paymentData,
-                orderDetails: getOrderDetails()
-              })
+              body: JSON.stringify({ ...paymentData, orderDetails: getOrderDetails() })
             });
             if (!verifyRes.ok) throw new Error("Payment verification failed");
 
             clearCart();
+            alert(`Payment successful! You earned ${POINTS_EARNED_PER_ORDER} points.`);
             navigate('/orders', { state: { guestPhone: cleanPhone }, replace: true });
-          } catch (err) {
-            alert(err.message);
-            setIsProcessing(false);
-          }
+          } catch (err) { alert(err.message); setIsProcessing(false); }
         },
         modal: { ondismiss: () => setIsProcessing(false) }
       };
       new window.Razorpay(options).open();
-    } catch (err) {
-      alert(err.message);
-      setIsProcessing(false);
-    }
+    } catch (err) { alert(err.message); setIsProcessing(false); }
   };
 
   const processCODOrder = async () => {
@@ -140,33 +160,25 @@ export default function Checkout() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderDetails: getOrderDetails() })
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
+      if (!response.ok) throw new Error("COD Order Failed");
 
       clearCart();
+      alert(`COD Order Placed! You earned ${POINTS_EARNED_PER_ORDER} points.`);
       navigate('/orders', { state: { guestPhone: cleanPhone }, replace: true });
-    } catch (err) {
-      alert('Order failed');
-      setIsProcessing(false);
-    }
+    } catch (err) { alert('Order failed'); setIsProcessing(false); }
   };
 
   if (cartItems.length === 0 && !isProcessing) return null;
 
   return (
     <div className="checkout-main-container">
-      {/* BACKGROUND BLOBS */}
       <div className="bg-blob blob1"></div>
       <div className="bg-blob blob2"></div>
-
       <HeaderTemp showBack={true} />
 
       <main className="checkout-content-wrapper fade-in-up">
         <h1 className="checkout-page-title">Secure Checkout</h1>
-        
         <div className="checkout-grid-layout">
-          
-          {/* LEFT: DELIVERY & PAYMENT FORM */}
           <div className="checkout-form-column">
             
             {/* DELIVERY SECTION */}
@@ -175,7 +187,6 @@ export default function Checkout() {
                 <IoLocationOutline size={24} color="#1B5E20" />
                 <h2 className="section-title">Delivery Details</h2>
               </div>
-              
               <div className="form-grid">
                 <div className="input-group">
                   <label>Full Name</label>
@@ -204,86 +215,74 @@ export default function Checkout() {
               </div>
             </div>
 
+            {/* REWARDS SECTION (Shows if Logged in OR if they typed a 10 digit phone number) */}
+            {(auth?.currentUser || cleanPhone.length === 10) && (
+              <div className="checkout-section-card shadow-premium fade-in-up">
+                <div className="section-header">
+                  <IoSparkles size={24} color="#F57F17" />
+                  <h2 className="section-title">Natureswad Rewards</h2>
+                </div>
+                <p className="points-balance-text">
+                  Current Balance: <strong>{userPoints}</strong> Points
+                </p>
+
+                {userPoints >= POINTS_REQUIRED_TO_REDEEM ? (
+                  <button 
+                    className={`redeem-btn ${usePoints ? 'active' : ''}`}
+                    onClick={() => !isProcessing && setUsePoints(!usePoints)}
+                    disabled={isProcessing}
+                  >
+                    <span>{usePoints ? `Redeeming ${POINTS_REQUIRED_TO_REDEEM} Points (-₹${DISCOUNT_VALUE})` : `Redeem ${POINTS_REQUIRED_TO_REDEEM} Points`}</span>
+                    <IoCheckmarkCircle size={20} color={usePoints ? '#1B5E20' : '#F57F17'} />
+                  </button>
+                ) : (
+                  <div className="points-progress-container">
+                    <div className="progress-bar-bg">
+                      <div className="progress-bar-fill" style={{ width: `${(userPoints / POINTS_REQUIRED_TO_REDEEM) * 100}%` }}></div>
+                    </div>
+                    <p className="points-hint">Earn {POINTS_REQUIRED_TO_REDEEM - userPoints} more points to unlock a ₹{DISCOUNT_VALUE} reward!</p>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* PAYMENT SECTION */}
             <div className="checkout-section-card shadow-premium">
               <div className="section-header">
                 <IoWalletOutline size={24} color="#1B5E20" />
                 <h2 className="section-title">Payment Method</h2>
               </div>
-
-              <div 
-                className={`pay-option-card ${paymentMethod === 'online' ? 'selected' : ''}`} 
-                onClick={() => !isProcessing && setPaymentMethod('online')}
-              >
+              <div className={`pay-option-card ${paymentMethod === 'online' ? 'selected' : ''}`} onClick={() => !isProcessing && setPaymentMethod('online')}>
                 <div className="pay-icon-bg"><IoCardOutline size={24} color={paymentMethod === 'online' ? '#FFF' : '#666'} /></div>
-                <div className="pay-option-text">
-                  <h4>Pay Online</h4>
-                  <p>UPI, Credit/Debit Cards, NetBanking</p>
-                </div>
+                <div className="pay-option-text"><h4>Pay Online</h4><p>UPI, Credit/Debit Cards, NetBanking</p></div>
                 <div className={`radio-circle ${paymentMethod === 'online' ? 'active' : ''}`}></div>
               </div>
-
-              <div 
-                className={`pay-option-card ${paymentMethod === 'cod' ? 'selected' : ''}`} 
-                onClick={() => !isProcessing && setPaymentMethod('cod')}
-              >
+              <div className={`pay-option-card ${paymentMethod === 'cod' ? 'selected' : ''}`} onClick={() => !isProcessing && setPaymentMethod('cod')}>
                 <div className="pay-icon-bg"><IoCashOutline size={24} color={paymentMethod === 'cod' ? '#FFF' : '#666'} /></div>
-                <div className="pay-option-text">
-                  <h4>Cash on Delivery</h4>
-                  <p>Pay at your doorstep</p>
-                </div>
+                <div className="pay-option-text"><h4>Cash on Delivery</h4><p>Pay at your doorstep</p></div>
                 <div className={`radio-circle ${paymentMethod === 'cod' ? 'active' : ''}`}></div>
               </div>
             </div>
           </div>
 
-          {/* RIGHT: BILL SUMMARY */}
           <div className="checkout-summary-column">
             <div className="checkout-summary-card shadow-premium">
               <h3 className="summary-title">Bill Summary</h3>
-              
-              <div className="summary-row">
-                <span className="summary-label">Item Total</span>
-                <span className="summary-value">₹{subtotal.toFixed(2)}</span>
-              </div>
-              <div className="summary-row">
-                <span className="summary-label">Delivery Fee</span>
-                <span className={shipping === 0 ? "free-text" : "summary-value"}>
-                  {shipping === 0 ? 'FREE' : `₹${shipping}`}
-                </span>
-              </div>
-              <div className="summary-row">
-                <span className="summary-label">Taxes (5%)</span>
-                <span className="summary-value">₹{tax.toFixed(2)}</span>
-              </div>
-              
+              <div className="summary-row"><span className="summary-label">Item Total</span><span className="summary-value">₹{subtotal.toFixed(2)}</span></div>
+              <div className="summary-row"><span className="summary-label">Delivery Fee</span><span className={shipping === 0 ? "free-text" : "summary-value"}>{shipping === 0 ? 'FREE' : `₹${shipping}`}</span></div>
+              <div className="summary-row"><span className="summary-label">Taxes (5%)</span><span className="summary-value">₹{tax.toFixed(2)}</span></div>
+              {usePoints && (
+                <div className="summary-row discount-row"><span className="summary-label">Points Discount</span><span className="summary-value">-₹{pointsDiscount.toFixed(2)}</span></div>
+              )}
               <div className="summary-divider"></div>
-              
-              <div className="summary-row total-row">
-                <span className="total-label">Amount to Pay</span>
-                <span className="total-value">₹{total.toFixed(2)}</span>
-              </div>
+              <div className="summary-row total-row"><span className="total-label">Amount to Pay</span><span className="total-value">₹{total.toFixed(2)}</span></div>
 
-              <button 
-                className={`checkout-action-btn ${isProcessing ? 'processing' : ''}`} 
-                onClick={handleCheckout}
-                disabled={isProcessing}
-              >
-                {isProcessing ? (
-                  <span className="spinner-text">Processing...</span>
-                ) : (
-                  <>
-                    <span className="checkout-action-text">
-                      {paymentMethod === 'online' ? `Pay ₹${total.toFixed(2)}` : `Place COD Order`}
-                    </span>
-                    <IoShieldCheckmark size={20} color="#FFF" style={{ marginLeft: '8px' }} />
-                  </>
-                )}
+              <button className={`checkout-action-btn ${isProcessing ? 'processing' : ''}`} onClick={handleCheckout} disabled={isProcessing}>
+                {isProcessing ? <span className="spinner-text">Processing...</span> : <><span className="checkout-action-text">{paymentMethod === 'online' ? `Pay ₹${total.toFixed(2)}` : `Place COD Order`}</span><IoShieldCheckmark size={20} color="#FFF" style={{ marginLeft: '8px' }} /></>}
               </button>
               
-              <p className="secure-checkout-note">
-                <IoShieldCheckmark size={14} /> 100% Secure Payments
-              </p>
+              <div className="earn-points-banner"><IoSparkles size={16} /><span>You will earn <strong>{POINTS_EARNED_PER_ORDER} points</strong> on this order!</span></div>
+              <p className="secure-checkout-note"><IoShieldCheckmark size={14} /> 100% Secure Payments</p>
             </div>
           </div>
 

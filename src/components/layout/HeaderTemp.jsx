@@ -1,7 +1,7 @@
 // src/components/layout/HeaderTemp.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { IoMenu, IoNavigate, IoChevronDown, IoArrowBack, IoCartOutline } from 'react-icons/io5';
+import { IoMenu, IoNavigate, IoChevronDown, IoArrowBack, IoCartOutline, IoStarOutline } from 'react-icons/io5';
 import Sidebar from './Sidebar'; 
 import { useCart } from '../../context/CartContext'; 
 import './HeaderTemp.css';
@@ -124,18 +124,18 @@ const HeaderTemp = () => {
             <img src="/assets/icon.png" alt="Natureswad Logo" className="header-logo-web interactive-hover" onClick={() => navigate('/')} />
 
             <div className="header-dynamic-left">
-  {isHome && (
-    <div className="location-container interactive-hover" onClick={() => fetchLocation(true)}>
-      <div className="location-title-row">
-        <IoNavigate size={20} color="#F25D23" className="location-icon" />
-        <span className="location-title truncate-text">{locationTitle}</span>
-        <IoChevronDown size={18} color="#2E7D32" className="chevron-icon" />
-      </div>
-      <span className="location-subtitle truncate-text">{locationSubtitle}</span>
-    </div>
-  )}
-</div>
-</div>
+              {isHome && (
+                <div className="location-container interactive-hover" onClick={() => fetchLocation(true)}>
+                  <div className="location-title-row">
+                    <IoNavigate size={20} color="#F25D23" className="location-icon" />
+                    <span className="location-title truncate-text">{locationTitle}</span>
+                    <IoChevronDown size={18} color="#2E7D32" className="chevron-icon" />
+                  </div>
+                  <span className="location-subtitle truncate-text">{locationSubtitle}</span>
+                </div>
+              )}
+            </div>
+          </div>
 
           <nav className="header-nav-desktop">
             <span className={`nav-link ${pathname === '/' ? 'active-nav' : ''}`} onClick={() => navigate('/')}>Home</span>
@@ -144,11 +144,24 @@ const HeaderTemp = () => {
             <span className={`nav-link ${pathname === '/testimonials' ? 'active-nav' : ''}`} onClick={() => navigate('/testimonials')}>Community</span>
           </nav>
 
-          <div className="header-right-group" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <div className="header-right-group" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
+             
+             {/* REWARDS BUTTON */}
+             <button 
+               className="header-btn interactive-hover" 
+               onClick={() => navigate('/rewards')} 
+               title="Natureswad Rewards"
+               style={{ position: 'relative', width: '48px', height: '48px', borderRadius: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0', background: 'transparent', border: 'none', cursor: 'pointer' }}
+             >
+               <IoStarOutline size={26} color="#F57F17" style={{ marginRight: '2px' }} />
+             </button>
+
+             {/* CART BUTTON */}
              <button 
                className="header-btn interactive-hover" 
                onClick={openCart} 
-               style={{ position: 'relative', width: '48px', height: '48px', borderRadius: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0' }}
+               title="Shopping Bag"
+               style={{ position: 'relative', width: '48px', height: '48px', borderRadius: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0', background: 'transparent', border: 'none', cursor: 'pointer' }}
              >
                <IoCartOutline size={26} color="#1B5E20" style={{ marginRight: '2px' }} />
                {cartCount > 0 && (

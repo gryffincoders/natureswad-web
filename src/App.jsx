@@ -21,9 +21,10 @@ import AdminOrders from './pages/Admin/AdminOrders';
 import Login from './pages/Auth/Login';
 import SignUp from './pages/Auth/SignUp';
 
-// Checkout & Orders
+// Checkout, Orders & Rewards
 import Checkout from './pages/Checkout/Checkout'; 
 import Orders from './pages/Orders/Orders';
+import Rewards from './pages/Rewards/Rewards'; // <-- IMPORTED NEW REWARDS PAGE
 
 // Legal & Compliance
 import Compliance from './pages/Policies/Compliance';
@@ -44,7 +45,10 @@ function App() {
         {/* Core Navigation */}
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
+        
+        {/* UPDATED: SEO Friendly Product Route */}
+        <Route path="/product/:category/:name/:id" element={<ProductDetail />} />
+        
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/bot" element={<Bot />} />
         <Route path="/guide" element={<NutritionalGuide />} />
@@ -58,6 +62,7 @@ function App() {
         {/* E-commerce Flow */}
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/rewards" element={<Rewards />} /> {/* <-- ADDED REWARDS ROUTE */}
         
         {/* Policies & Compliance */}
         <Route path="/compliance" element={<Compliance />} />

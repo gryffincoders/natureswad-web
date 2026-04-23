@@ -1,15 +1,13 @@
-// src/pages/Shop/Shop.jsx
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import HeaderTemp from '../../components/layout/HeaderTemp';
-import { PRODUCTS } from '../../constants/ProductsData';
+import { PRODUCTS, slugify } from '../../constants/ProductsData';
 import { useWishlist } from '../../context/WishlistContext'; 
 import './Shop.css';
 
 const cleanText = (text) => text ? text.replace(/\//g, '') : '';
 
-// SEO: Keyword infused category descriptions
 const CATEGORY_DESCRIPTIONS = {
   'Atta & Grains': 'Buy organic atta online, low GI flours, and the best millets for diabetes.',
   'Pulses & Dals': 'Buy organic dal online India. Protein-rich, chemical-free pulses for daily nutrition.',
@@ -55,10 +53,12 @@ export default function Shop() {
     };
 
     const handleProductClick = () => {
-      navigate(`/product/${item.id}`);
+      const categoryPath = slugify(item.category);
+      const productNamePath = slugify(item.name);
+      // Constructing: /product/category-name/product-name/id
+      navigate(`/product/${categoryPath}/${productNamePath}/${item.id}`);
     };
 
-    // SEO Title Splitter - Extracts the clean name for the UI card
     const nameParts = cleanText(item.name).split('|');
     const displayTitle = nameParts[0].trim();
 
@@ -69,13 +69,11 @@ export default function Shop() {
         </button>
 
         <div className="image-wrapper">
-          {/* SEO Image Alt Tag */}
           <img src={displayImage} alt={item.name} className="product-image" />
           <div className="image-overlay"></div>
         </div>
 
         <div className="card-content">
-          {/* UI clean title */}
           <h3 className="product-name line-clamp-2" style={{fontSize: '16px', margin: '0 0 12px'}}>{displayTitle}</h3>
           <div className="action-row">
             <span className="product-price">{displayPrice}</span>
@@ -114,7 +112,6 @@ export default function Shop() {
 
       <main className="shop-scroll-content">
         <div className="hero-section fade-in-up">
-          {/* SEO: Replaced "Our Offerings" with H1 Keyword */}
           <h1 className="page-title">Buy Organic Food Products India</h1>
           <div className="divider"></div>
           <p className="page-subtitle">Buy millets online, natural groceries, and chemical-free foods.</p>
