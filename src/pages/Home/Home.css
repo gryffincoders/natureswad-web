@@ -120,7 +120,13 @@
 }
 .supplier-content { display: flex; justify-content: space-between; align-items: center; }
 .supplier-text { max-width: 600px; color: white; }
-.supplier-text h3 { font-size: 36px; margin: 0 0 16px; font-family: Georgia, serif; font-weight: 900; }
+.supplier-text h3 { 
+  font-size: 36px; 
+  margin: 0 0 16px; 
+  font-family: Georgia, serif; 
+  font-weight: 900; 
+  line-height: 1.3; /* <-- Added this to fix the vertical overlapping */
+}
 .supplier-text p { font-size: 18px; color: #A5D6A7; margin: 0; line-height: 1.6; }
 .supplier-btn { background: white; color: #1B5E20; border: none; padding: 16px 32px; border-radius: 40px; font-size: 16px; font-weight: 800; cursor: pointer; transition: transform 0.2s; }
 .supplier-btn:hover { transform: scale(1.05); }

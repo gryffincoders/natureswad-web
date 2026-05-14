@@ -111,7 +111,7 @@ export const PRODUCTS = {
   'm1': {
     id: 'm1',
     name: 'Proso Millet',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Proso-millet.png',
     category: 'Atta & Grains',
     description: 'High in protein, crude fiber, minerals and calcium. Healthy heart, Prevent diabetes and Strengthen bones.',
     variants: [{ label: '500g', price: '₹110.00', originalPrice: '₹140.00' }],
@@ -125,7 +125,7 @@ export const PRODUCTS = {
   'm2': {
     id: 'm2',
     name: 'Kodo Millet',
-    // image: '/assets/placeholder.png',
+    image: '/assets/Kodo-millet.png',
     category: 'Atta & Grains',
     description: 'It has the highest dietary fiber amongst all the millets. Anti-diabetic, Antioxidant, Anti-cholesterol and anti-hypertension.',
     variants: [{ label: '500g', price: '₹120.00', originalPrice: '₹150.00' }],
@@ -139,7 +139,7 @@ export const PRODUCTS = {
   'm3': {
     id: 'm3',
     name: 'Barnyard Millet',
-    // image: '/assets/placeholder.png',
+    image: '/assets/Barnyard-millet.png',
     category: 'Atta & Grains',
     description: 'Low in calorie, low GI. Rich in fiber and iron, gluten free.',
     variants: [{ label: '500g', price: '₹130.00', originalPrice: '₹160.00' }],
@@ -153,7 +153,7 @@ export const PRODUCTS = {
   'm4': {
     id: 'm4',
     name: 'Foxtail Millet',
-    // image: '/assets/placeholder.png',
+     image: '/assets/placeholder.png',
     category: 'Atta & Grains',
     description: 'It has double quantity of protein compared to rice. Diabetic friendly and aids in weight loss.',
     variants: [{ label: '500g', price: '₹115.00', originalPrice: '₹145.00' }],
@@ -167,7 +167,7 @@ export const PRODUCTS = {
   'm5': {
     id: 'm5',
     name: 'Finger Millet',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Finger-millet.png',
     category: 'Atta & Grains',
     description: 'High amount of calcium, proteins and fiber. Low GI helps with weight loss and diabetes.',
     variants: [{ label: '500g', price: '₹90.00', originalPrice: '₹120.00' }],
@@ -181,7 +181,7 @@ export const PRODUCTS = {
   'm6': {
     id: 'm6',
     name: 'Little Millet',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Little-millet.png',
     category: 'Atta & Grains',
     description: 'Dietary fiber, Detoxifies the body. Lowers bad cholesterol and Prevents Type-II diabetes.',
     variants: [{ label: '500g', price: '₹125.00', originalPrice: '₹155.00' }],
@@ -195,7 +195,7 @@ export const PRODUCTS = {
   'm7': {
     id: 'm7',
     name: 'Brown Top Millet',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Brown-top-millet.png',
     category: 'Atta & Grains',
     description: 'Rich in fibre, iron, calcium, potassium, magnesium. Controls high BP and acts as a probiotic for respiratory disorders.',
     variants: [{ label: '500g', price: '₹140.00', originalPrice: '₹180.00' }],
@@ -224,7 +224,7 @@ export const PRODUCTS = {
   'p1': {
     id: 'p1',
     name: 'Chickpeas',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Chikpeas.png',
     category: 'Pulses & Dals',
     description: 'Rich in plant based protein. Boosts Bone Health.',
     variants: [{ label: '500g', price: '₹120.00', originalPrice: '₹150.00' }],
@@ -237,7 +237,7 @@ export const PRODUCTS = {
   'p2': {
     id: 'p2',
     name: 'Green Gram',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Greengram.png',
     category: 'Pulses & Dals',
     description: 'Rich in vitamins and minerals, weight and diabetes management and improves digestion.',
     variants: [{ label: '500g', price: '₹140.00', originalPrice: '₹170.00' }],
@@ -250,7 +250,7 @@ export const PRODUCTS = {
   'p3': {
     id: 'p3',
     name: 'Horse Gram',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Horsegram.png',
     category: 'Pulses & Dals',
     description: 'Rich in phosphorus, calcium, protein and iron. Treats health issues like asthma, skin disease, and kidney stone.',
     variants: [{ label: '500g', price: '₹110.00', originalPrice: '₹140.00' }],
@@ -276,7 +276,7 @@ export const PRODUCTS = {
   'p5': {
     id: 'p5',
     name: 'Cowpeas',
-    // image: '/assets/placeholder.png',
+    image: '/assets/Cowpeas.png',
     category: 'Pulses & Dals',
     description: 'Good sources of vegetarian protein. Excellent sources of several B-complex vitamins.',
     variants: [{ label: '500g', price: '₹120.00', originalPrice: '₹150.00' }],
@@ -289,7 +289,7 @@ export const PRODUCTS = {
   'p6': {
     id: 'p6',
     name: 'Urad Dal',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Urad-Dal.png',
     category: 'Pulses & Dals',
     description: 'Richest sources of proteins, iron and vitamin B. Improves Bone Health.',
     variants: [{ label: '500g', price: '₹150.00', originalPrice: '₹180.00' }],
@@ -302,7 +302,10 @@ export const PRODUCTS = {
   'p7': {
     id: 'p7',
     name: 'Moong Dal & Moong Dal Chilka',
-    // image: '/assets/placeholder.png',
+    images: [
+      '/assets/Moong-Dal.png',
+      '/assets/Moong-Dal-Chilka.png'
+    ],
     category: 'Pulses & Dals',
     description: 'Rich in amino acid, calcium, fiber. Reduce the problems of constipation and blood cholesterol and sugar levels. Rich in Nutrients Improves Heart Health.',
     variants: [{ label: '500g', price: '₹140.00', originalPrice: '₹170.00' }],
@@ -318,7 +321,7 @@ export const PRODUCTS = {
   'p8': {
     id: 'p8',
     name: 'Channa Dal',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Channadal.png',
     category: 'Pulses & Dals',
     description: 'Rich in Protein, fiber and iron. Reduces heart disease, Aids in weight loss and lower cholesterol.',
     variants: [{ label: '500g', price: '₹130.00', originalPrice: '₹160.00' }],
@@ -331,7 +334,7 @@ export const PRODUCTS = {
   'p9': {
     id: 'p9',
     name: 'Toor Dal',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Toor-dal.png',
     category: 'Pulses & Dals',
     description: 'Rich iron, calcium and protein. Contains dietary fibres and Full of antioxidants.',
     variants: [{ label: '500g', price: '₹160.00', originalPrice: '₹190.00' }],
@@ -344,7 +347,10 @@ export const PRODUCTS = {
   'p10': {
     id: 'p10',
     name: 'Whole Masoor & Masoor Dal',
-    // image: '/assets/placeholder.png',
+    images: [
+      '/assets/Masoor-Dal.png',
+      '/assets/Whole-Masoor.png'
+    ],
     category: 'Pulses & Dals',
     description: 'High in carbohydrates, iron and Low in fat & cholesterol. Nourishes teeth and bones. Rich in proteins and minerals and also Contains dietary fibres and vitamins.',
     variants: [{ label: '500g', price: '₹140.00', originalPrice: '₹170.00' }],
@@ -413,7 +419,7 @@ export const PRODUCTS = {
   'f2': {
     id: 'f2',
     name: 'Multi Millet Flour',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Multi-millet-flour.png',
     category: 'Atta & Grains',
     description: 'Gluten free, rich in dietary fiber, controls diabetes and helps in preventing celiac disease.',
     variants: [{ label: '1 Kg', price: '₹220.00', originalPrice: '₹260.00' }],
@@ -426,7 +432,7 @@ export const PRODUCTS = {
   'f3': {
     id: 'f3',
     name: 'Bajra Flour',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Bajra-flour.png',
     category: 'Atta & Grains',
     description: 'Gluten Free. Manage Diabetes and protect gut health. Packed With Omega-3 Fats and antioxidants.',
     variants: [{ label: '1 Kg', price: '₹140.00', originalPrice: '₹170.00' }],
@@ -439,7 +445,7 @@ export const PRODUCTS = {
   'f4': {
     id: 'f4',
     name: 'Jowar Flour & Daliya',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Jowar-Flour.png',
     category: 'Atta & Grains',
     description: 'High iron, zinc and calcium. Gluten-free, high-protein, dietary fiber and iron. Diabetic friendly, aids in weight loss.',
     variants: [{ label: '1 Kg', price: '₹160.00', originalPrice: '₹190.00' }],
@@ -455,7 +461,7 @@ export const PRODUCTS = {
   'f5': {
     id: 'f5',
     name: 'Channa Flour',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Channa-Flour.png',
     category: 'Atta & Grains',
     description: 'Provides calories, Contains dietary fiber and Rich in iron and calcium.',
     variants: [{ label: '500g', price: '₹120.00', originalPrice: '₹150.00' }],
@@ -468,7 +474,7 @@ export const PRODUCTS = {
   'f6': {
     id: 'f6',
     name: 'Finger Millet Flour',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Finger-Millet-Flour.png',
     category: 'Atta & Grains',
     description: 'High amount of calcium, proteins and fiber. Low glycemic index, helps with weight loss and diabetes.',
     variants: [{ label: '1 Kg', price: '₹150.00', originalPrice: '₹180.00' }],
@@ -481,7 +487,7 @@ export const PRODUCTS = {
   'f7': {
     id: 'f7',
     name: 'Corn Flour',
-    // image: '/assets/placeholder.png',
+     image: '/assets/Corn-Flour.png',
     category: 'Atta & Grains',
     description: 'Gluten free, Rich in fiber, Great source of antioxidants. Supports digestive health.',
     variants: [{ label: '500g', price: '₹90.00', originalPrice: '₹120.00' }],

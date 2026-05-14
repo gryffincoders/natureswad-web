@@ -51,18 +51,64 @@ export default function Checkout() {
     stateName.trim().length > 0 &&
     pincode.trim().length === 6;
 
-  // --- FETCH USER POINTS (WORKS FOR GUEST PHONE NUMBERS TOO) ---
+  // --- LOAD SAVED ADDRESS ON MOUNT ---
+  useEffect(() => {
+    try {
+      const savedAddressString = localStorage.getItem('@saved_address');
+      if (savedAddressString) {
+        const savedData = JSON.parse(savedAddressString);
+        if (savedData.name) setName(savedData.name);
+        if (savedData.phone) setPhone(savedData.phone);
+        if (savedData.address) setAddress(savedData.address);
+        if (savedData.city) setCity(savedData.city);
+        if (savedData.stateName) setStateName(savedData.stateName);
+        if (savedData.pincode) setPincode(savedData.pincode);
+      }
+    } catch (error) {
+      console.log("Could not load saved address", error);
+    }
+  }, []);
+
+  // --- AUTO-FILL STATE & CITY FROM PINCODE ---
+  useEffect(() => {
+    const fetchLocationData = async () => {
+      // Only trigger if pincode is exactly 6 digits
+      if (pincode.length === 6) {
+        try {
+          const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+          const data = await response.json();
+          
+          if (data && data[0] && data[0].Status === "Success") {
+            const postOffice = data[0].PostOffice[0];
+            
+            // Set State automatically
+            if (postOffice.State) {
+              setStateName(postOffice.State);
+            }
+            
+            // Set City/District automatically if the user hasn't typed anything yet
+            if (!city && (postOffice.District || postOffice.Block)) {
+              setCity(postOffice.District || postOffice.Block);
+            }
+          }
+        } catch (error) {
+          console.log("Could not fetch pincode details", error);
+        }
+      }
+    };
+
+    fetchLocationData();
+  }, [pincode]); // Runs whenever pincode changes
+
+  // --- FETCH USER POINTS ---
   useEffect(() => {
     const fetchUserPoints = async () => {
-      // Use logged in UID, or fallback to the 10-digit phone number they are typing
       const uid = auth?.currentUser?.uid || (cleanPhone.length === 10 ? cleanPhone : null);
-      
       if (!uid) {
         setUserPoints(0);
-        setUsePoints(false); // Reset if they delete their phone number
+        setUsePoints(false); 
         return;
       }
-
       try {
         const response = await fetch(`${API_URL}/user-points/${uid}`);
         if (response.ok) {
@@ -74,7 +120,7 @@ export default function Checkout() {
       }
     };
     fetchUserPoints();
-  }, [auth?.currentUser, cleanPhone]); // Re-runs when they type their phone number
+  }, [auth?.currentUser, cleanPhone]);
 
   // --- CALCULATIONS ---
   const subtotal = Number(cartTotal) || 0;
@@ -99,6 +145,16 @@ export default function Checkout() {
     address: { name, phone: cleanPhone, address, city, stateName, pincode },
     paymentMethod: paymentMethod === 'online' ? 'Online - Razorpay' : 'Cash on Delivery'
   });
+
+  // --- SAVE ADDRESS HELPER ---
+  const saveAddressLocally = () => {
+    try {
+      const addressData = { name, phone: cleanPhone, address, city, stateName, pincode };
+      localStorage.setItem('@saved_address', JSON.stringify(addressData));
+    } catch (error) {
+      console.log("Could not save address locally", error);
+    }
+  };
 
   const handleCheckout = async () => {
     if (!isAddressValid) {
@@ -141,6 +197,7 @@ export default function Checkout() {
             });
             if (!verifyRes.ok) throw new Error("Payment verification failed");
 
+            saveAddressLocally(); // <-- Save address on success
             clearCart();
             alert(`Payment successful! You earned ${POINTS_EARNED_PER_ORDER} points.`);
             navigate('/orders', { state: { guestPhone: cleanPhone }, replace: true });
@@ -162,6 +219,7 @@ export default function Checkout() {
       });
       if (!response.ok) throw new Error("COD Order Failed");
 
+      saveAddressLocally(); // <-- Save address on success
       clearCart();
       alert(`COD Order Placed! You earned ${POINTS_EARNED_PER_ORDER} points.`);
       navigate('/orders', { state: { guestPhone: cleanPhone }, replace: true });
@@ -190,23 +248,24 @@ export default function Checkout() {
               <div className="form-grid">
                 <div className="input-group">
                   <label>Full Name</label>
-                  <input type="text" placeholder="John Doe" value={name} onChange={e => setName(e.target.value)} disabled={isProcessing} />
+                  <input type="text" placeholder="Enter your full name" value={name} onChange={e => setName(e.target.value)} disabled={isProcessing} />
                 </div>
                 <div className="input-group">
                   <label>Phone Number</label>
-                  <input type="tel" maxLength="10" placeholder="10-digit number" value={phone} onChange={e => setPhone(e.target.value)} disabled={isProcessing} />
+                  <input type="tel" maxLength="10" placeholder="Mobile no" value={phone} onChange={e => setPhone(e.target.value)} disabled={isProcessing} />
                 </div>
                 <div className="input-group full-width">
                   <label>Complete Address</label>
                   <textarea rows="3" placeholder="House No, Street, Area" value={address} onChange={e => setAddress(e.target.value)} disabled={isProcessing} />
                 </div>
                 <div className="input-group">
-                  <label>City</label>
-                  <input type="text" placeholder="City" value={city} onChange={e => setCity(e.target.value)} disabled={isProcessing} />
+                  <label>Pincode</label>
+                  {/* Moved Pincode before City/State for better flow since it auto-fills them */}
+                  <input type="tel" maxLength="6" placeholder="Pincode" value={pincode} onChange={e => setPincode(e.target.value)} disabled={isProcessing} />
                 </div>
                 <div className="input-group">
-                  <label>Pincode</label>
-                  <input type="tel" maxLength="6" placeholder="560099" value={pincode} onChange={e => setPincode(e.target.value)} disabled={isProcessing} />
+                  <label>City</label>
+                  <input type="text" placeholder="City" value={city} onChange={e => setCity(e.target.value)} disabled={isProcessing} />
                 </div>
                 <div className="input-group full-width">
                   <label>State</label>
@@ -215,7 +274,7 @@ export default function Checkout() {
               </div>
             </div>
 
-            {/* REWARDS SECTION (Shows if Logged in OR if they typed a 10 digit phone number) */}
+            {/* REWARDS SECTION */}
             {(auth?.currentUser || cleanPhone.length === 10) && (
               <div className="checkout-section-card shadow-premium fade-in-up">
                 <div className="section-header">

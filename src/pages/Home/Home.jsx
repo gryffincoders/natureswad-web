@@ -218,7 +218,7 @@ export default function Home() {
           <div className="supplier-content">
             <div className="supplier-text">
               <h3>Join Our Natural Grocery Network</h3>
-              <p>Addressing specific nutritional needs with customized diet & lifestyle realignments across Bangalore and India.</p>
+              <p>Addressing specific nutritional needs with customized diet & lifestyle realignments across India.</p>
             </div>
             <button className="supplier-btn">Get In Touch</button>
           </div>
